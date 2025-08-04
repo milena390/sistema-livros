@@ -1,7 +1,7 @@
 <?php
 // index.php
-require_once 'classes/Livro.php';
-require_once 'classes/LivroRepository.php';
+require_once 'models/Livro.php';
+require_once 'models/LivroRepository.php';
 
 $livroRepository = new LivroRepository();
 
