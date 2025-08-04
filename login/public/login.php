@@ -68,7 +68,7 @@
 </html>
 <?php
 if (isset($_POST['luffy'])) {
-    header('Location: Index.php');
+    header('Location: IndexL.php');
     exit;
 }
 ?>
