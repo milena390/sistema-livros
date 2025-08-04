@@ -1,0 +1,32 @@
+[
+    {
+        "titulo": "corpo",
+        "autor": "jorge",
+        "ano": "2008",
+        "isbn": "1234567891234"
+    },
+    {
+        "titulo": "humano",
+        "autor": "king",
+        "ano": "4444",
+        "isbn": "4002892212345"
+    },
+    {
+        "titulo": "presunto",
+        "autor": "ravisya",
+        "ano": "2001",
+        "isbn": "1212121212121"
+    },
+    {
+        "titulo": "reescrevendo o alfabeto",
+        "autor": "milena da silva",
+        "ano": "2001",
+        "isbn": "2257892110017"
+    },
+    {
+        "titulo": "harry potiqueer",
+        "autor": "Lizperctor Eduardo",
+        "ano": "1890",
+        "isbn": "192288799an227"
+    }
+]
