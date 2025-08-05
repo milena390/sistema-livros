@@ -1,19 +1,25 @@
 <?php
 // classes/Livro.php
 class Livro {
+    private $id;
     private $titulo;
     private $autor;
     private $ano;
     private $isbn;
 
-    public function __construct($titulo, $autor, $ano, $isbn) {
+    public function __construct($id, $titulo, $autor, $ano, $isbn) {
+        $this->id = $id;
         $this->titulo = $titulo;
         $this->autor = $autor;
         $this->ano = $ano;
         $this->isbn = $isbn;
     }
 
-    // Métodos getters e setters
+    // Getters
+    public function getId() {
+        return $this->id;
+    }
+
     public function getTitulo() {
         return $this->titulo;
     }
@@ -28,6 +34,11 @@ class Livro {
 
     public function getIsbn() {
         return $this->isbn;
+    }
+
+    // Setters
+    public function setId($id) {
+        $this->id = $id;
     }
 
     public function setTitulo($titulo) {
