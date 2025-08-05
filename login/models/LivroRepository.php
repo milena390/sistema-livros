@@ -1,5 +1,7 @@
 <?php
 // classes/LivroRepository.php
+require_once 'Livro.php';
+
 class LivroRepository {
     private $filePath = 'data/livros.json'; // Caminho do arquivo JSON
     private $livros = [];
@@ -11,9 +13,24 @@ class LivroRepository {
         }
     }
 
+    // Gera um ID único com base nos livros existentes
+    private function gerarId() {
+        if (empty($this->livros)) {
+            return 1;
+        }
+        $ids = array_column($this->livros, 'id');
+        return max($ids) + 1;
+    }
+
     // Adiciona um livro ao arquivo JSON
     public function adicionar(Livro $livro) {
+        // Define o ID se ainda não estiver definido
+        if ($livro->getId() === null) {
+            $livro->setId($this->gerarId());
+        }
+
         $this->livros[] = [
+            'id' => $livro->getId(),
             'titulo' => $livro->getTitulo(),
             'autor' => $livro->getAutor(),
             'ano' => $livro->getAno(),
@@ -27,10 +44,10 @@ class LivroRepository {
         return $this->livros;
     }
 
-    // Edita um livro existente pelo ISBN
-    public function editar($isbn, Livro $livroAtualizado) {
+    // Edita um livro existente pelo ID
+    public function editar($id, Livro $livroAtualizado) {
         foreach ($this->livros as &$livro) {
-            if ($livro['isbn'] === $isbn) {
+            if ($livro['id'] === $id) {
                 $livro['titulo'] = $livroAtualizado->getTitulo();
                 $livro['autor'] = $livroAtualizado->getAutor();
                 $livro['ano'] = $livroAtualizado->getAno();
@@ -41,10 +58,10 @@ class LivroRepository {
         $this->salvar();
     }
 
-    // Exclui um livro pelo ISBN
-    public function excluir($isbn) {
-        $this->livros = array_filter($this->livros, function($livro) use ($isbn) {
-            return $livro['isbn'] !== $isbn;
+    // Exclui um livro pelo ID
+    public function excluir($id) {
+        $this->livros = array_filter($this->livros, function($livro) use ($id) {
+            return $livro['id'] !== $id;
         });
         $this->livros = array_values($this->livros); // Reindexa o array
         $this->salvar();
