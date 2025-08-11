@@ -6,7 +6,7 @@
     <title>Biblioteca PM</title>
     <style>
         body {
-            background-color: #FFD1DC;
+            background-color: #E6E6FA;
             font-family: Arial, sans-serif;
             text-align: center;
             color: #8B4513;
@@ -26,9 +26,9 @@
             margin-top: 20px;
         }
         button {
-            background-color: #FFB6C1;
+            background-color: #FFF0F5;
             border: none;
-            color: #8B4513;
+            color: #D8BFD8;
             padding: 15px 30px;
             font-size: 18px;
             cursor: pointer;
