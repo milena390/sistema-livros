@@ -1,7 +1,7 @@
 <?php
 // index.php
-require_once __DIR__ . '/models/Livro.php';
-require_once __DIR__ . '/models/LivroRepository.php';
+require_once  'models/Livro.php';
+require_once  'models/LivroRepository.php';
 
 $livroRepository = new LivroRepository();
 
