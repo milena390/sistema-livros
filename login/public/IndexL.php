@@ -1,7 +1,7 @@
 <?php
-// index.php
-require_once  '../models/Livro.php';
-require_once  'models/LivroRepository.php';
+// Caminhos corrigidos para incluir arquivos
+require_once __DIR__ . '/../models/Livro.php';
+require_once __DIR__ . '/../models/LivroRepository.php';
 
 $livroRepository = new LivroRepository();
 
@@ -9,11 +9,15 @@ $livroRepository = new LivroRepository();
 if (isset($_POST['adicionar'])) {
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
-    $ano = $_POST['ano'] . "-01-01"; // converte apenas ano para DATE
+    $ano = $_POST['ano'] . "-01-01"; // converte ano para formato DATE
     $isbn = $_POST['isbn'];
 
     $livro = new Livro($isbn, $titulo, $autor, $ano);
     $livroRepository->adicionar($livro);
+
+    // Evita reenvio e mantém na lista
+    header("Location: IndexL.php");
+    exit;
 }
 
 // Editar livro
@@ -26,18 +30,23 @@ if (isset($_POST['editar'])) {
 
     $livro = new Livro($isbn, $titulo, $autor, $ano, $id);
     $livroRepository->editar($id, $livro);
+
+    header("Location: IndexL.php");
+    exit;
 }
 
 // Excluir livro
 if (isset($_POST['excluir'])) {
     $id = $_POST['id'];
     $livroRepository->excluir($id);
+
+    header("Location: IndexL.php");
+    exit;
 }
 
 // Listar livros
 $livros = $livroRepository->listar();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -130,7 +139,7 @@ $livros = $livroRepository->listar();
 </head>
 <body>
     <h1>Cadastro de Livros</h1>
-    <form action="index.php" method="POST">
+    <form action="IndexL.php" method="POST">
         <label for="isbn">ISBN:</label>
         <input type="text" name="isbn" id="isbn" required>
 
@@ -155,7 +164,7 @@ $livros = $livroRepository->listar();
                 - ISBN: <?= htmlspecialchars($livro['isbn']) ?> | ID: <?= htmlspecialchars($livro['id']) ?>
 
                 <!-- Formulário para Editar -->
-                <form action="index.php" method="POST">
+                <form action="IndexL.php" method="POST">
                     <input type="hidden" name="id" value="<?= $livro['id'] ?>">
                     <input type="text" name="isbn" value="<?= htmlspecialchars($livro['isbn']) ?>" required>
                     <input type="text" name="titulo" value="<?= htmlspecialchars($livro['titulo']) ?>" required>
@@ -165,7 +174,7 @@ $livros = $livroRepository->listar();
                 </form>
 
                 <!-- Formulário para Excluir -->
-                <form action="index.php" method="POST">
+                <form action="IndexL.php" method="POST">
                     <input type="hidden" name="id" value="<?= $livro['id'] ?>">
                     <button type="submit" name="excluir" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
                 </form>
