@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doceria PJ</title>
+    <title>Biblioteca PM</title>
     <style>
         body {
             background-color: #FFD1DC;
@@ -46,8 +46,8 @@
         <!-- Logotipo -->
         <img src="login.jpeg" alt="Logo da Doceria PJ" class="logo">
 
-        <h1>Bem-vindo ao Mundo dos Doces!</h1>
-        <p>Faça seu login ou cadastro para explorar nossas delícias açucaradas.</p>
+        <h1>Bem-vindo a biblioteca PM!</h1>
+        <p>Faça seu login ou cadastro para explorar nossos mundo literário</p>
         <div class="buttons">
             <form action="login.php" method="get" style="display: inline;">
                 <button type="submit">Login</button>
