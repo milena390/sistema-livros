@@ -44,7 +44,7 @@
 <body>
     <div class="container">
         <!-- Logotipo -->
-        <img src="login.jpeg" alt="Logo da Doceria PJ" class="logo">
+        <img src="livro.jpg" alt="Logo da Biblioteca PJ" class="logo">
 
         <h1>Bem-vindo a biblioteca PM!</h1>
         <p>Faça seu login ou cadastro para explorar nossos mundo literário</p>
