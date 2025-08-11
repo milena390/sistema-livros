@@ -1,7 +1,7 @@
 <?php
 // index.php
-require_once 'models/Livro.php';
-require_once 'models/LivroRepository.php';
+require_once __DIR__ . '/models/Livro.php';
+require_once __DIR__ . '/models/LivroRepository.php';
 
 $livroRepository = new LivroRepository();
 
@@ -9,13 +9,10 @@ $livroRepository = new LivroRepository();
 if (isset($_POST['adicionar'])) {
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
-    $ano = $_POST['ano'];
+    $ano = $_POST['ano'] . "-01-01"; // converte apenas ano para DATE
     $isbn = $_POST['isbn'];
 
-    // Gerar um ID único para o livro ao adicionar
-    $id = uniqid('livro_', true); // Exemplo de ID gerado
-
-    $livro = new Livro($titulo, $autor, $ano, $isbn, $id);
+    $livro = new Livro($isbn, $titulo, $autor, $ano);
     $livroRepository->adicionar($livro);
 }
 
@@ -25,9 +22,9 @@ if (isset($_POST['editar'])) {
     $isbn = $_POST['isbn'];
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
-    $ano = $_POST['ano'];
+    $ano = $_POST['ano'] . "-01-01";
 
-    $livro = new Livro($titulo, $autor, $ano, $isbn, $id);
+    $livro = new Livro($isbn, $titulo, $autor, $ano, $id);
     $livroRepository->editar($id, $livro);
 }
 
@@ -121,9 +118,8 @@ $livros = $livroRepository->listar();
             width: auto;
         }
 
-        li input[type="text"],
-        li input[type="number"] {
-            width: 150px;
+        li input {
+            width: 140px;
             margin-right: 5px;
         }
 
@@ -135,6 +131,9 @@ $livros = $livroRepository->listar();
 <body>
     <h1>Cadastro de Livros</h1>
     <form action="index.php" method="POST">
+        <label for="isbn">ISBN:</label>
+        <input type="text" name="isbn" id="isbn" required>
+
         <label for="titulo">Título:</label>
         <input type="text" name="titulo" id="titulo" required>
 
@@ -142,10 +141,7 @@ $livros = $livroRepository->listar();
         <input type="text" name="autor" id="autor" required>
 
         <label for="ano">Ano:</label>
-        <input type="number" name="ano" id="ano" required>
-
-        <label for="isbn">ISBN:</label>
-        <input type="text" name="isbn" id="isbn" required>
+        <input type="number" name="ano" id="ano" min="1000" max="9999" required>
 
         <button type="submit" name="adicionar">Adicionar Livro</button>
     </form>
@@ -155,16 +151,16 @@ $livros = $livroRepository->listar();
         <?php foreach ($livros as $livro): ?>
             <li>
                 <strong><?= htmlspecialchars($livro['titulo']) ?></strong> - 
-                <?= htmlspecialchars($livro['autor']) ?> (<?= $livro['ano'] ?>) 
-                - ISBN: <?= $livro['isbn'] ?> | ID: <?= htmlspecialchars($livro['id']) ?>
+                <?= htmlspecialchars($livro['autor']) ?> (<?= date('Y', strtotime($livro['ano'])) ?>) 
+                - ISBN: <?= htmlspecialchars($livro['isbn']) ?> | ID: <?= htmlspecialchars($livro['id']) ?>
 
                 <!-- Formulário para Editar -->
                 <form action="index.php" method="POST">
                     <input type="hidden" name="id" value="<?= $livro['id'] ?>">
-                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
+                    <input type="text" name="isbn" value="<?= htmlspecialchars($livro['isbn']) ?>" required>
                     <input type="text" name="titulo" value="<?= htmlspecialchars($livro['titulo']) ?>" required>
                     <input type="text" name="autor" value="<?= htmlspecialchars($livro['autor']) ?>" required>
-                    <input type="number" name="ano" value="<?= $livro['ano'] ?>" required>
+                    <input type="number" name="ano" value="<?= date('Y', strtotime($livro['ano'])) ?>" required>
                     <button type="submit" name="editar">Editar</button>
                 </form>
 
