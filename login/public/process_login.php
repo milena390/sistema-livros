@@ -16,6 +16,8 @@ if ($usuario) {
     $_SESSION['logado'] = true;
     $_SESSION['usuario_id'] = $usuario->getId();
     $_SESSION['nome_usuario'] = $usuario->getNome(); // Obtendo o nome do usuário
+}else{
+    $_SESSION['nome_usuario'] = 'ERRO';
 }
 ?>
 
@@ -67,10 +69,10 @@ if ($usuario) {
 <body>
     <div class="container">
         <h2>Login Bem-Sucedido!</h2>
-        <p>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario']); ?>! 🎉</p>
-        <p>Aproveite sua experiência no Mundo dos Doces.</p>
-        <form action="index.php" method="get">
-            <button type="submit">Ir para a página inicial</button>
+        <p>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario']); ?></p>
+        <p>Aproveite sua experiência no Mundo literário</p>
+        <form action="IndexL.php" method="get">
+            <button type="submit">Cadastrar livro</button>
         </form>
     </div>
 </body>

@@ -12,25 +12,29 @@ if (isset($_POST['adicionar'])) {
     $ano = $_POST['ano'];
     $isbn = $_POST['isbn'];
 
-    $livro = new Livro($titulo, $autor, $ano, $isbn);
+    // Gerar um ID único para o livro ao adicionar
+    $id = uniqid('livro_', true); // Exemplo de ID gerado
+
+    $livro = new Livro($titulo, $autor, $ano, $isbn, $id);
     $livroRepository->adicionar($livro);
 }
 
 // Editar livro
 if (isset($_POST['editar'])) {
+    $id = $_POST['id'];
     $isbn = $_POST['isbn'];
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
     $ano = $_POST['ano'];
 
-    $livro = new Livro($titulo, $autor, $ano, $isbn);
-    $livroRepository->editar($isbn, $livro);
+    $livro = new Livro($titulo, $autor, $ano, $isbn, $id);
+    $livroRepository->editar($id, $livro);
 }
 
 // Excluir livro
 if (isset($_POST['excluir'])) {
-    $isbn = $_POST['isbn'];
-    $livroRepository->excluir($isbn);
+    $id = $_POST['id'];
+    $livroRepository->excluir($id);
 }
 
 // Listar livros
@@ -152,10 +156,11 @@ $livros = $livroRepository->listar();
             <li>
                 <strong><?= htmlspecialchars($livro['titulo']) ?></strong> - 
                 <?= htmlspecialchars($livro['autor']) ?> (<?= $livro['ano'] ?>) 
-                - ISBN: <?= $livro['isbn'] ?>
+                - ISBN: <?= $livro['isbn'] ?> | ID: <?= htmlspecialchars($livro['id']) ?>
 
                 <!-- Formulário para Editar -->
                 <form action="index.php" method="POST">
+                    <input type="hidden" name="id" value="<?= $livro['id'] ?>">
                     <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
                     <input type="text" name="titulo" value="<?= htmlspecialchars($livro['titulo']) ?>" required>
                     <input type="text" name="autor" value="<?= htmlspecialchars($livro['autor']) ?>" required>
@@ -165,7 +170,7 @@ $livros = $livroRepository->listar();
 
                 <!-- Formulário para Excluir -->
                 <form action="index.php" method="POST">
-                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
+                    <input type="hidden" name="id" value="<?= $livro['id'] ?>">
                     <button type="submit" name="excluir" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
                 </form>
             </li>
