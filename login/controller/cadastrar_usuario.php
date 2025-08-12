@@ -1,15 +1,15 @@
 <?php
 session_start();
 
-require_once  '../models/UsuarioDAO.php';
-require_once  '../utils/Sanitizacao.php';
+require_once '../models/UsuarioDAO.php';
+require_once '../utils/Sanitizacao.php';
 
 $nome = Sanitizacao::sanitizar($_POST['nome']);
 $email = Sanitizacao::sanitizar($_POST['email']);
 $senha = Sanitizacao::sanitizar($_POST['senha']);
 
 $usuarioDAO = new UsuarioDAO();
-$usuario = $usuarioDAO->criarUsuario ($nome, $email, $senha);
+$usuario = $usuarioDAO->criarUsuario($nome, $email, $senha);
 
 if ($usuario) {
     $_SESSION['mensagem'] = "Usuário criado com sucesso! :)";

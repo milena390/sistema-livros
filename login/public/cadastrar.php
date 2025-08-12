@@ -57,7 +57,7 @@
 <body>
     <div class="container">
         <h2>Cadastro de Usuário</h2>
-        <form action="cadastrar_usuario.php" method="POST">
+        <form action="../controller/cadastrar_usuario.php" method="POST">
             <label>Nome Completo:</label><br>
             <input type="text" name="nome" required><br>
 
