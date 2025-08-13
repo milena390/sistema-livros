@@ -54,7 +54,7 @@
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form action="process_login.php" method="POST">
+        <form action="../controller/process_login.php" method="POST">
             <label>Email:</label><br>
             <input type="email" name="email" required><br>
 

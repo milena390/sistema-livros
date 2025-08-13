@@ -17,6 +17,6 @@ if ($usuario) {
     $_SESSION['mensagem'] = "Erro ao criar usuário :(. Esse email ou nome pode já estar sendo utilizado.";
 }
 
-header("Location: cadastrar.php");
+header("Location: ../public/cadastrar.php");
 exit();
 ?>

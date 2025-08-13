@@ -71,7 +71,7 @@ if ($usuario) {
         <h2>Login Bem-Sucedido!</h2>
         <p>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario']); ?></p>
         <p>Aproveite sua experiência no Mundo literário</p>
-        <form action="IndexL.php" method="get">
+        <form action="../public/IndexL.php" method="get">
             <button type="submit">Cadastrar livro</button>
         </form>
     </div>
