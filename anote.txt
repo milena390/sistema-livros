@@ -1,0 +1,5 @@
+autoload- funciona como um orientador, orienta o projeto das classes.
+PSR-4
+PSR-7
+
+HTACCESS- deixa a url mais amigavel
