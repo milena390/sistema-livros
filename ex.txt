@@ -1,0 +1,51 @@
+# Teste Unitário Não Funcional – Função `calcularMedia()`
+
+## Objetivo:
+Validar requisitos não funcionais da função `calcularMedia(valores: List[float]) -> float`.
+
+### Requisitos:
+
+- ⏱️ **Desempenho**:
+  - A função deve ser executada em menos de 10ms para uma lista de até 10.000 elementos.
+
+- 🛑 **Tratamento de Erros**:
+  - Deve lançar `ValueError` se a lista estiver vazia.
+
+- 🔒 **Segurança (mínima)**:
+  - A função não deve modificar a lista original (imutabilidade).
+
+### Resultados:
+| Requisito         | Resultado | Observações              |
+|-------------------|-----------|--------------------------|
+| Desempenho        | OK        | Tempo médio: 7.4ms       |
+| Tratamento de Erros | OK        | Exceção capturada com sucesso |
+| Segurança          | OK        | Lista original intacta   |
+
+### Ambiente de Teste:
+- Python 3.11
+- Plataforma: Linux
+- Framework: pytest + timeit
+
+
+
+
+
+
+Nome do Teste: test_somar_numeros
+Objetivo: Verificar se a função somar retorna o valor correto
+Função testada: somar(a: int, b: int) -> int
+Entrada: a = 2, b = 3
+Saída esperada: 5
+Resultado: Passou
+Ferramenta: pytest
+
+
+Cenário: Login com sucesso
+Pré-condição: Usuário 'joao@email.com' cadastrado com senha '1234'
+Passos:
+  1. Acessar a tela de login
+  2. Inserir email e senha
+  3. Clicar em "Entrar"
+Resultado Esperado: Usuário redirecionado para a página inicial
+Resultado: OK
+Ferramenta: Selenium
