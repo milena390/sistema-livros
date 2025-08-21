@@ -5,8 +5,8 @@ class LivroRepository {
 
     public function __construct() {
         // Define o caminho do arquivo JSON.
-        // O caminho correto é '.. /../' para sair das pastas 'livro' e 'models'.
-        $dataDir = _DIR_ . '/../../data';
+        // O caminho correto é '../' para sair das pastas 'models'.
+        $dataDir = _DIR_ . '../data';
         $this->filePath = $dataDir . '/livros.json';
 
         // Verifica se o diretório de dados existe. Se não, tenta criá-lo.
