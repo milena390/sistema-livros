@@ -1,7 +1,8 @@
 <?php
-// Caminhos corrigidos para incluir arquivos
-require_once __DIR__ . '/../models/Livro.php';
-require_once __DIR__ . '/../models/LivroRepository.php';
+session_start();
+require_once '../models/Livro.php';
+require_once '../models/LivroRepository.php';
+
 
 $livroRepository = new LivroRepository();
 
@@ -9,177 +10,211 @@ $livroRepository = new LivroRepository();
 if (isset($_POST['adicionar'])) {
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
-    $ano = $_POST['ano'] . "-01-01"; // converte ano para formato DATE
+    $ano = $_POST['ano'];
     $isbn = $_POST['isbn'];
 
-    $livro = new Livro($isbn, $titulo, $autor, $ano);
+    $livro = new Livro($titulo, $autor, $ano, $isbn);
     $livroRepository->adicionar($livro);
 
-    // Evita reenvio e mantém na lista
-    header("Location: IndexL.php");
+    $_SESSION['mensagem'] = "📚 Livro cadastrado com sucesso!";
+    // Redireciona para cad.php para exibir a mensagem e a lista atualizada
+    header("Location: cad.php");
     exit;
 }
 
 // Editar livro
 if (isset($_POST['editar'])) {
-    $id = $_POST['id'];
     $isbn = $_POST['isbn'];
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
-    $ano = $_POST['ano'] . "-01-01";
+    $ano = $_POST['ano'];
 
-    $livro = new Livro($isbn, $titulo, $autor, $ano, $id);
-    $livroRepository->editar($id, $livro);
+    $livro = new Livro($titulo, $autor, $ano, $isbn);
+    $livroRepository->editar($isbn, $livro);
 
-    header("Location: IndexL.php");
+    $_SESSION['mensagem'] = "✏️ Livro editado com sucesso!";
+    header("Location: cad.php");
     exit;
 }
 
 // Excluir livro
 if (isset($_POST['excluir'])) {
-    $id = $_POST['id'];
-    $livroRepository->excluir($id);
+    $isbn = $_POST['isbn'];
+    $livroRepository->excluir($isbn);
 
-    header("Location: IndexL.php");
+    $_SESSION['mensagem'] = "🗑️ Livro excluído com sucesso!";
+    header("Location: cad.php");
     exit;
 }
 
 // Listar livros
 $livros = $livroRepository->listar();
+$mensagem = $_SESSION['mensagem'] ?? '';
+unset($_SESSION['mensagem']);
 ?>
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Livros</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 40px;
-        }
+  <meta charset="UTF-8">
+  <title>Cadastro de Livros</title>
+  <style>
+    /* Estilos CSS permanecem os mesmos */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('foto2.jpg');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+    }
 
-        form {
-            background-color: #ffffff;
-            padding: 20px;
-            margin: 20px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-        }
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+    h1, h2 {
+      color: #cc9aa2;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
+    .mensagem {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #4CAF50;
+      background-color: #e6ffe6;
+      padding: 10px;
+      border-radius: 10px;
+    }
 
-        button {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    form {
+      margin-bottom: 30px;
+      text-align: left;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
 
-        ul {
-            list-style: none;
-            padding: 0;
-            max-width: 800px;
-            margin: auto;
-        }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-        li {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+    button {
+      background-color: #ffc0cb;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        li form {
-            display: inline-block;
-            margin-top: 10px;
-            margin-right: 10px;
-            width: auto;
-        }
+    button:hover {
+      background-color: #8f5863;
+    }
 
-        li input {
-            width: 140px;
-            margin-right: 5px;
-        }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
 
-        li button {
-            margin-top: 0;
-        }
-    </style>
+    li {
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+    }
+
+    li form {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
     <h1>Cadastro de Livros</h1>
-    <form action="IndexL.php" method="POST">
-        <label for="isbn">ISBN:</label>
-        <input type="text" name="isbn" id="isbn" required>
 
-        <label for="titulo">Título:</label>
-        <input type="text" name="titulo" id="titulo" required>
+    <?php if ($mensagem): ?>
+      <div class="mensagem"><?= $mensagem ?></div>
+    <?php endif; ?>
 
-        <label for="autor">Autor:</label>
-        <input type="text" name="autor" id="autor" required>
+    <form action="cad.php" method="POST">
+      <label for="titulo">Título:</label>
+      <input type="text" name="titulo" id="titulo" required>
 
-        <label for="ano">Ano:</label>
-        <input type="number" name="ano" id="ano" min="1000" max="9999" required>
+      <label for="autor">Autor:</label>
+      <input type="text" name="autor" id="autor" required>
 
-        <button type="submit" name="adicionar">Adicionar Livro</button>
+      <label for="ano">Ano:</label>
+      <input type="number" name="ano" id="ano" required>
+
+      <label for="isbn">ISBN:</label>
+      <input type="text" name="isbn" id="isbn" required>
+
+      <button type="submit" name="adicionar">Adicionar Livro</button>
     </form>
 
     <h2>Lista de Livros</h2>
     <ul>
         <?php foreach ($livros as $livro): ?>
             <li>
-                <strong><?= htmlspecialchars($livro['titulo']) ?></strong> - 
-                <?= htmlspecialchars($livro['autor']) ?> (<?= date('Y', strtotime($livro['ano'])) ?>) 
-                - ISBN: <?= htmlspecialchars($livro['isbn']) ?> | ID: <?= htmlspecialchars($livro['id']) ?>
+                <?= htmlspecialchars($livro['titulo']) ?> -
+                <?= htmlspecialchars($livro['autor']) ?> (<?= $livro['ano'] ?>)
+                - ISBN: <?= $livro['isbn'] ?>
 
-                <!-- Formulário para Editar -->
-                <form action="IndexL.php" method="POST">
-                    <input type="hidden" name="id" value="<?= $livro['id'] ?>">
-                    <input type="text" name="isbn" value="<?= htmlspecialchars($livro['isbn']) ?>" required>
-                    <input type="text" name="titulo" value="<?= htmlspecialchars($livro['titulo']) ?>" required>
-                    <input type="text" name="autor" value="<?= htmlspecialchars($livro['autor']) ?>" required>
-                    <input type="number" name="ano" value="<?= date('Y', strtotime($livro['ano'])) ?>" required>
-                    <button type="submit" name="editar">Editar</button>
+                <form action="cad.php" method="POST" style="display:inline;">
+                    <input type="hidden" name="editar" value="1">
+                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
+                    <input type="text" name="titulo" value="<?= $livro['titulo'] ?>" required>
+                    <input type="text" name="autor" value="<?= $livro['autor'] ?>" required>
+                    <input type="number" name="ano" value="<?= $livro['ano'] ?>" required>
+                    <button type="submit">Editar</button>
                 </form>
 
-                <!-- Formulário para Excluir -->
-                <form action="IndexL.php" method="POST">
-                    <input type="hidden" name="id" value="<?= $livro['id'] ?>">
-                    <button type="submit" name="excluir" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                <form action="cad.php" method="POST" style="display:inline;">
+                    <input type="hidden" name="excluir" value="1">
+                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
+                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
                 </form>
             </li>
         <?php endforeach; ?>
     </ul>
+  </div>
 </body>
 </html>
