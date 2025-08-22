@@ -6,7 +6,7 @@ class LivroRepository {
     public function __construct() {
         // Define o caminho do arquivo JSON.
         // O caminho correto é '../' para sair das pastas 'models'.
-        $dataDir = _DIR_ . '../data';
+        $dataDir = '../data';
         $this->filePath = $dataDir . '/livros.json';
 
         // Verifica se o diretório de dados existe. Se não, tenta criá-lo.
@@ -22,22 +22,28 @@ class LivroRepository {
     }
 
     public function adicionar(Livro $livro) {
+        // Gerando um ID único para o novo livro (maior ID + 1)
+        $id = count($this->livros) > 0 ? max(array_column($this->livros, 'id')) + 1 : 1;
+
+        // Adiciona o livro com o ID
         $this->livros[] = [
+            'id'     => $id,
             'titulo' => $livro->getTitulo(),
             'autor'  => $livro->getAutor(),
             'ano'    => $livro->getAno(),
             'isbn'   => $livro->getIsbn()
         ];
+
         $this->salvar(); // salva no JSON
     }
-    
+
     public function listar() {
         return $this->livros;
     }
 
-    public function editar($isbn, Livro $livroAtualizado) {
+    public function editar($id, Livro $livroAtualizado) {
         foreach ($this->livros as &$livro) {
-            if ($livro['isbn'] === $isbn) {
+            if ($livro['id'] === $id) {
                 $livro['titulo'] = $livroAtualizado->getTitulo();
                 $livro['autor'] = $livroAtualizado->getAutor();
                 $livro['ano'] = $livroAtualizado->getAno();
@@ -48,8 +54,8 @@ class LivroRepository {
         $this->salvar();
     }
 
-    public function excluir($isbn) {
-        $this->livros = array_filter($this->livros, fn($livro) => $livro['isbn'] !== $isbn);
+    public function excluir($id) {
+        $this->livros = array_filter($this->livros, fn($livro) => $livro['id'] !== $id);
         $this->livros = array_values($this->livros);
         $this->salvar();
     }
@@ -64,3 +70,4 @@ class LivroRepository {
         }
     }
 }
+?>
