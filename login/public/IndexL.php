@@ -1,54 +1,92 @@
 <?php
 session_start();
-require_once '../models/Livro.php';
-require_once '../models/LivroRepository.php';
 
+// Caminho para o arquivo JSON
+define('JSON_FILE', 'livros.json');
 
-$livroRepository = new LivroRepository();
+// Função para ler os dados do arquivo JSON
+function lerLivros() {
+    if (file_exists(JSON_FILE)) {
+        $jsonData = file_get_contents(JSON_FILE);
+        return json_decode($jsonData, true);
+    }
+    return [];
+}
 
-// Adicionar livro
+// Função para salvar os dados no arquivo JSON
+function salvarLivros($livros) {
+    $jsonData = json_encode($livros, JSON_PRETTY_PRINT);
+    file_put_contents(JSON_FILE, $jsonData);
+}
+
+// Função para adicionar livro
 if (isset($_POST['adicionar'])) {
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
     $ano = $_POST['ano'];
     $isbn = $_POST['isbn'];
 
-    $livro = new Livro($titulo, $autor, $ano, $isbn);
-    $livroRepository->adicionar($livro);
+    $livros = lerLivros();
+    $id = count($livros) > 0 ? max(array_column($livros, 'id')) + 1 : 1; // Gerando um novo ID
+
+    $livro = [
+        'id' => $id,
+        'titulo' => $titulo,
+        'autor' => $autor,
+        'ano' => $ano,
+        'isbn' => $isbn
+    ];
+
+    $livros[] = $livro;
+    salvarLivros($livros);
 
     $_SESSION['mensagem'] = "📚 Livro cadastrado com sucesso!";
-    // Redireciona para cad.php para exibir a mensagem e a lista atualizada
-    header("Location: cad.php");
+    header("Location: IndexL.php");
     exit;
 }
 
-// Editar livro
+// Função para editar livro
 if (isset($_POST['editar'])) {
-    $isbn = $_POST['isbn'];
+    $id = $_POST['id'];
     $titulo = $_POST['titulo'];
     $autor = $_POST['autor'];
     $ano = $_POST['ano'];
 
-    $livro = new Livro($titulo, $autor, $ano, $isbn);
-    $livroRepository->editar($isbn, $livro);
+    $livros = lerLivros();
+    foreach ($livros as &$livro) {
+        if ($livro['id'] == $id) {
+            $livro['titulo'] = $titulo;
+            $livro['autor'] = $autor;
+            $livro['ano'] = $ano;
+            break;
+        }
+    }
+
+    salvarLivros($livros);
 
     $_SESSION['mensagem'] = "✏️ Livro editado com sucesso!";
-    header("Location: cad.php");
+    header("Location: IndexL.php");
     exit;
 }
 
-// Excluir livro
+// Função para excluir livro
 if (isset($_POST['excluir'])) {
-    $isbn = $_POST['isbn'];
-    $livroRepository->excluir($isbn);
+    $id = $_POST['id'];
+    $livros = lerLivros();
+    $livros = array_filter($livros, function ($livro) use ($id) {
+        return $livro['id'] != $id;
+    });
+    $livros = array_values($livros); // Reindexando o array
+
+    salvarLivros($livros);
 
     $_SESSION['mensagem'] = "🗑️ Livro excluído com sucesso!";
-    header("Location: cad.php");
+    header("Location: IndexL.php");
     exit;
 }
 
 // Listar livros
-$livros = $livroRepository->listar();
+$livros = lerLivros();
 $mensagem = $_SESSION['mensagem'] ?? '';
 unset($_SESSION['mensagem']);
 ?>
@@ -155,12 +193,46 @@ unset($_SESSION['mensagem']);
       margin-left: 10px;
     }
 
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .button-container button {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .button-container button.edit {
+      background-color: #ffa500;
+      color: white;
+    }
+
+    .button-container button.delete {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .button-container button:hover {
+      opacity: 0.8;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 20px;
       }
 
       button {
+        width: 100%;
+      }
+
+      .button-container {
+        flex-direction: column;
+      }
+
+      .button-container button {
         width: 100%;
       }
     }
@@ -174,7 +246,7 @@ unset($_SESSION['mensagem']);
       <div class="mensagem"><?= $mensagem ?></div>
     <?php endif; ?>
 
-    <form action="cad.php" method="POST">
+    <form action="IndexL.php" method="POST">
       <label for="titulo">Título:</label>
       <input type="text" name="titulo" id="titulo" required>
 
@@ -194,24 +266,27 @@ unset($_SESSION['mensagem']);
     <ul>
         <?php foreach ($livros as $livro): ?>
             <li>
-                <?= htmlspecialchars($livro['titulo']) ?> -
-                <?= htmlspecialchars($livro['autor']) ?> (<?= $livro['ano'] ?>)
-                - ISBN: <?= $livro['isbn'] ?>
+                <div class="livro-info">
+                    <h3><?= htmlspecialchars($livro['titulo']) ?> - <?= htmlspecialchars($livro['autor']) ?></h3>
+                    <p>Ano: <?= $livro['ano'] ?> | ISBN: <?= $livro['isbn'] ?> | ID: <?= $livro['id'] ?></p>
+                </div>
 
-                <form action="cad.php" method="POST" style="display:inline;">
-                    <input type="hidden" name="editar" value="1">
-                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
-                    <input type="text" name="titulo" value="<?= $livro['titulo'] ?>" required>
-                    <input type="text" name="autor" value="<?= $livro['autor'] ?>" required>
-                    <input type="number" name="ano" value="<?= $livro['ano'] ?>" required>
-                    <button type="submit">Editar</button>
-                </form>
+                <div class="button-container">
+                    <!-- Formulário para editar -->
+                    <form action="IndexL.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $livro['id'] ?>"> <!-- Usando ID aqui -->
+                        <input type="text" name="titulo" value="<?= $livro['titulo'] ?>" required>
+                        <input type="text" name="autor" value="<?= $livro['autor'] ?>" required>
+                        <input type="number" name="ano" value="<?= $livro['ano'] ?>" required>
+                        <button type="submit" name="editar" class="edit">Salvar Edição</button>
+                    </form>
 
-                <form action="cad.php" method="POST" style="display:inline;">
-                    <input type="hidden" name="excluir" value="1">
-                    <input type="hidden" name="isbn" value="<?= $livro['isbn'] ?>">
-                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-                </form>
+                    <!-- Formulário para excluir -->
+                    <form action="IndexL.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $livro['id'] ?>"> <!-- Usando ID aqui -->
+                        <button type="submit" name="excluir" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                    </form>
+                </div>
             </li>
         <?php endforeach; ?>
     </ul>
