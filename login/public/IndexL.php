@@ -97,7 +97,7 @@ unset($_SESSION['mensagem']);
   <meta charset="UTF-8">
   <title>Cadastro de Livros</title>
   <style>
-    /* Estilos CSS permanecem os mesmos */
+    /* Reset e base */
     * {
       margin: 0;
       padding: 0;
@@ -106,7 +106,8 @@ unset($_SESSION['mensagem']);
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-image: url('foto2.jpg');
+      background-color: #f5f7fa; /* cinza muito claro */
+      color: #2d3748; /* cinza escuro */
       background-size: cover;
       background-position: center;
       min-height: 100vh;
@@ -117,16 +118,16 @@ unset($_SESSION['mensagem']);
     }
 
     .container {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(250, 250, 250, 0.95); /* quase branco */
       padding: 40px;
       border-radius: 20px;
       width: 100%;
       max-width: 800px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0 25px rgba(45, 55, 72, 0.15); /* sombra suave cinza */
     }
 
     h1, h2 {
-      color: #cc9aa2;
+      color: #2b6cb0; /* azul médio */
       text-align: center;
       margin-bottom: 20px;
     }
@@ -135,8 +136,8 @@ unset($_SESSION['mensagem']);
       text-align: center;
       margin-bottom: 20px;
       font-weight: bold;
-      color: #4CAF50;
-      background-color: #e6ffe6;
+      color: #276749; /* verde escuro */
+      background-color: #c6f6d5; /* verde claro */
       padding: 10px;
       border-radius: 10px;
     }
@@ -157,11 +158,19 @@ unset($_SESSION['mensagem']);
       padding: 10px;
       margin-top: 5px;
       border-radius: 5px;
-      border: 1px solid #ccc;
+      border: 1px solid #a0aec0; /* cinza claro */
+      background-color: #fff;
+      color: #2d3748;
+    }
+
+    input:focus {
+      border-color: #2b6cb0; /* azul médio */
+      outline: none;
+      box-shadow: 0 0 5px #2b6cb0aa;
     }
 
     button {
-      background-color: #ffc0cb;
+      background-color: #3182ce; /* azul vibrante */
       color: white;
       padding: 10px 20px;
       margin-top: 15px;
@@ -173,7 +182,7 @@ unset($_SESSION['mensagem']);
     }
 
     button:hover {
-      background-color: #8f5863;
+      background-color: #2c5282; /* azul escuro */
     }
 
     ul {
@@ -182,10 +191,11 @@ unset($_SESSION['mensagem']);
     }
 
     li {
-      background-color: #f9f9f9;
+      background-color: #edf2f7; /* cinza claro */
       padding: 15px;
       margin-bottom: 10px;
       border-radius: 10px;
+      color: #2d3748;
     }
 
     li form {
@@ -196,6 +206,7 @@ unset($_SESSION['mensagem']);
     .button-container {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .button-container button {
@@ -203,16 +214,25 @@ unset($_SESSION['mensagem']);
       font-size: 14px;
       border-radius: 30px;
       cursor: pointer;
+      border: none;
+      color: white;
+      transition: opacity 0.3s ease;
     }
 
     .button-container button.edit {
-      background-color: #ffa500;
-      color: white;
+      background-color: #d69e2e; /* amarelo dourado */
+    }
+
+    .button-container button.edit:hover {
+      background-color: #b7791f; /* amarelo escuro */
     }
 
     .button-container button.delete {
-      background-color: #f44336;
-      color: white;
+      background-color: #e53e3e; /* vermelho */
+    }
+
+    .button-container button.delete:hover {
+      background-color: #9b2c2c; /* vermelho escuro */
     }
 
     .button-container button:hover {
@@ -274,16 +294,16 @@ unset($_SESSION['mensagem']);
                 <div class="button-container">
                     <!-- Formulário para editar -->
                     <form action="IndexL.php" method="POST">
-                        <input type="hidden" name="id" value="<?= $livro['id'] ?>"> <!-- Usando ID aqui -->
-                        <input type="text" name="titulo" value="<?= $livro['titulo'] ?>" required>
-                        <input type="text" name="autor" value="<?= $livro['autor'] ?>" required>
+                        <input type="hidden" name="id" value="<?= $livro['id'] ?>">
+                        <input type="text" name="titulo" value="<?= htmlspecialchars($livro['titulo']) ?>" required>
+                        <input type="text" name="autor" value="<?= htmlspecialchars($livro['autor']) ?>" required>
                         <input type="number" name="ano" value="<?= $livro['ano'] ?>" required>
                         <button type="submit" name="editar" class="edit">Salvar Edição</button>
                     </form>
 
                     <!-- Formulário para excluir -->
                     <form action="IndexL.php" method="POST">
-                        <input type="hidden" name="id" value="<?= $livro['id'] ?>"> <!-- Usando ID aqui -->
+                        <input type="hidden" name="id" value="<?= $livro['id'] ?>">
                         <button type="submit" name="excluir" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
                     </form>
                 </div>
