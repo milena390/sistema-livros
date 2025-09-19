@@ -97,166 +97,184 @@ unset($_SESSION['mensagem']);
   <meta charset="UTF-8">
   <title>Cadastro de Livros</title>
   <style>
-    /* Reset e base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  /* Paleta aconchegante em bege e cinza */
+  :root {
+    --bg: #F5F1E8;          /* fundo bege claro */
+    --card: #FAF7F0;        /* cartão ligeiramente mais claro */
+    --text: #4E4A46;        /* cinza quente escuro */
+    --muted: #6B655E;       /* cinza médio para subtítulos */
+    --border: #D2C6B8;      /* bege acinzentado */
+    --btn: #EDE3D4;         /* bege do botão */
+    --btn-hover: #D9CBB8;   /* bege mais escuro no hover */
+    --shadow: rgba(34, 30, 24, 0.12);
+    --shadow-strong: rgba(34, 30, 24, 0.18);
+  }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa; /* cinza muito claro */
-      color: #2d3748; /* cinza escuro */
-      background-size: cover;
-      background-position: center;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px;
-    }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+    line-height: 1.5;
+  }
+
+  .container {
+    background-color: var(--card);
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 8px 24px var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  h1, h2 {
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .mensagem {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--muted);
+    background-color: #EFE9E0; /* bege suave */
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  form {
+    margin-bottom: 30px;
+    text-align: left;
+  }
+
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: var(--muted);
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: #fff;
+    color: var(--text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  input:focus {
+    border-color: #CDBFAE;
+    outline: none;
+    box-shadow: 0 0 6px rgba(205, 191, 174, 0.6);
+  }
+
+  button {
+    background-color: var(--btn);
+    color: var(--text);
+    padding: 12px 24px;
+    margin-top: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--shadow);
+    transition: background-color 0.2s ease, transform 0.05s ease, box-shadow 0.2s ease;
+  }
+
+  button:hover {
+    background-color: var(--btn-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px var(--shadow-strong);
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 20px;
+  }
+
+  li {
+    background-color: #F2EFE9; /* bege acinzentado claro */
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: var(--text);
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  li form {
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .button-container button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background-color: var(--btn);
+    color: var(--text);
+    transition: background-color 0.2s ease;
+  }
+
+  .button-container button.edit {
+    background-color: #E4D8C7; /* bege dourado */
+  }
+
+  .button-container button.edit:hover {
+    background-color: #D1C0A8;
+  }
+
+  .button-container button.delete {
+    background-color: #E0B4B4; /* bege avermelhado */
+  }
+
+  .button-container button.delete:hover {
+    background-color: #CFA2A2;
+  }
+
+  @media (max-width: 600px) {
     .container {
-      background-color: rgba(250, 250, 250, 0.95); /* quase branco */
-      padding: 40px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 800px;
-      box-shadow: 0 0 25px rgba(45, 55, 72, 0.15); /* sombra suave cinza */
-    }
-
-    h1, h2 {
-      color: #2b6cb0; /* azul médio */
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .mensagem {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: bold;
-      color: #276749; /* verde escuro */
-      background-color: #c6f6d5; /* verde claro */
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    form {
-      margin-bottom: 30px;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #a0aec0; /* cinza claro */
-      background-color: #fff;
-      color: #2d3748;
-    }
-
-    input:focus {
-      border-color: #2b6cb0; /* azul médio */
-      outline: none;
-      box-shadow: 0 0 5px #2b6cb0aa;
+      padding: 20px;
     }
 
     button {
-      background-color: #3182ce; /* azul vibrante */
-      color: white;
-      padding: 10px 20px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #2c5282; /* azul escuro */
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      background-color: #edf2f7; /* cinza claro */
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      color: #2d3748;
-    }
-
-    li form {
-      display: inline-block;
-      margin-left: 10px;
+      width: 100%;
     }
 
     .button-container {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      flex-direction: column;
     }
 
     .button-container button {
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 30px;
-      cursor: pointer;
-      border: none;
-      color: white;
-      transition: opacity 0.3s ease;
+      width: 100%;
     }
+  }
+</style>
 
-    .button-container button.edit {
-      background-color: #d69e2e; /* amarelo dourado */
-    }
-
-    .button-container button.edit:hover {
-      background-color: #b7791f; /* amarelo escuro */
-    }
-
-    .button-container button.delete {
-      background-color: #e53e3e; /* vermelho */
-    }
-
-    .button-container button.delete:hover {
-      background-color: #9b2c2c; /* vermelho escuro */
-    }
-
-    .button-container button:hover {
-      opacity: 0.8;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
-
-      button {
-        width: 100%;
-      }
-
-      .button-container {
-        flex-direction: column;
-      }
-
-      .button-container button {
-        width: 100%;
-      }
-    }
-  </style>
 </head>
 <body>
   <div class="container">
