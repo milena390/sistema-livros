@@ -109,7 +109,7 @@
 <body>
     <div class="container">
         <!-- Logotipo -->
-        <img src="livro.jpg" alt="Logo da Biblioteca PJ" class="logo">
+        <img src="../outros/livro.jpg" alt="Logo da Biblioteca PJ" class="logo">
 
         <h1>Bem-vindo à biblioteca PM!</h1>
         <p>Faça seu login ou cadastro para explorar nosso mundo literário</p>
